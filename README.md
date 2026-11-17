@@ -45,6 +45,8 @@ python3 -m http.server 8000
 
 ## 发布
 
-推送到 `main` 后由 `.github/workflows/deploy.yml` 通过 GitHub Actions 发布到 Pages
-（工作流用 `actions/configure-pages` 的 `enablement: true` 尝试自动开通 Pages；
-若账号权限不允许，则在仓库 Settings → Pages → Source 选 “GitHub Actions” 后重新运行工作流）。
+- 线上地址：https://anglejuebi.github.io/20261117/
+- Pages 实际发布的是 **`gh-pages`** 分支（本仓库首次推送时由 GitHub 自动开通，源为分支编译）。
+- `.github/workflows/publish.yml` 在每次 push `main` 之后，把同一提交强推到 `gh-pages`，Pages 随即重建。
+  所以只需要维护 `main`，不要手工编辑 `gh-pages`。
+- 验证发布是否生效：页面 HTML 头部有 `<!-- build: ... -->` 时间戳，与本仓库最新提交一致即已上线。
