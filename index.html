@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BRIGHT-Flash · 实验设计 7 张主图</title>
+<meta name="description" content="BRIGHT-Flash 乳腺 WSI 多任务模型：实验设计七张主图与每张图的展示方向。">
+<meta name="color-scheme" content="light">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#figures">跳到图版</a>
+
+<header class="top">
+  <div class="wrap">
+    <div class="bar">
+      <span class="brand">BRIGHT-Flash</span>
+      <span class="bar-note">实验设计图版</span>
+    </div>
+    <h1>文章实验设计 · 七张主图</h1>
+    <p class="sub">乳腺癌 WSI 多任务模型 ｜ 低倍全片密集覆盖 vs 高倍稀疏采样</p>
+    <p class="hint">点击任意图片放大 · 滚轮缩放 · 拖拽平移 · ← → 切换</p>
+    <nav class="idx" aria-label="主图索引">
+      <a href="#f1"><span class="idx-n">01</span><span class="idx-t">研究全景</span></a>
+      <a href="#f2"><span class="idx-n">02</span><span class="idx-t">与基础模型头对头</span></a>
+      <a href="#f3"><span class="idx-n">03</span><span class="idx-t">选择策略消融</span></a>
+      <a href="#f4"><span class="idx-n">04</span><span class="idx-t">路由可视化</span></a>
+      <a href="#f5"><span class="idx-n">05</span><span class="idx-t">四任务域外推</span></a>
+      <a href="#f6"><span class="idx-n">06</span><span class="idx-t">效率与性能</span></a>
+      <a href="#f7"><span class="idx-n">07</span><span class="idx-t">管线可扩展性</span></a>
+    </nav>
+  </div>
+</header>
+
+<main id="figures">
+  <section class="fig" id="f1">
+    <div class="wrap">
+      <div class="meta">
+        <div class="eyebrow"><span class="num">Figure 1</span><span class="tag">概念图 · 含历史点估计</span></div>
+        <h2>Study overview<span class="zh">研究全景</span></h2>
+        <p class="lead"><span class="lead-k">展示方向</span>开篇“地图”：一次交代双路由管线、20 个临床任务、外部验证设置，以及 5x 密集覆盖与 20x 稀疏窗口的差别，让读者先知道你要证明什么。</p>
+        <p class="panels">a 双路由管线 · b 四类任务域 · c 开发院 → 锁定模型 → 外院 · d 覆盖度对比 · e 历史均值</p>
+      </div>
+      <figure class="plate">
+        <a class="zoomable" href="assets/figures/orig/fig-01.png"
+           data-full="assets/figures/fig-01.webp"
+           data-orig="assets/figures/orig/fig-01.png"
+           data-w="1536" data-h="1024" data-n="1" data-title="Study overview" data-zh="研究全景"
+           aria-label="放大查看 Figure 1：Study overview">
+          <img src="assets/figures/fig-01.webp" width="1536" height="1024"
+               style="max-width:1536px" alt="Figure 1 研究全景：BRIGHT-Flash 双路由管线、20 个临床任务、内部开发与三家外部医院、密集低倍覆盖与稀疏高倍窗口的对比，以及 20 任务历史验证均值。" loading="lazy" decoding="async">
+        </a>
+      </figure>
+    </div>
+  </section>
+  <section class="fig" id="f2">
+    <div class="wrap">
+      <div class="meta">
+        <div class="eyebrow"><span class="num">Figure 2</span><span class="tag">混合来源历史点估计</span></div>
+        <h2>Comparative performance of other foundation models<span class="zh">与基础模型头对头</span></h2>
+        <p class="lead"><span class="lead-k">展示方向</span>主对照图：横轴耗时、纵轴精度，把 BRIGHT-Flash 放在左上角；再用逐任务 ΔAUROC 与排名分布说明它在哪些任务域赢、哪些持平。</p>
+        <p class="panels">a 能力与两条路由 · b 精度-时间 · c 时间构成 · d 逐任务差异 · e 排名分布</p>
+      </div>
+      <figure class="plate">
+        <a class="zoomable" href="assets/figures/orig/fig-02.png"
+           data-full="assets/figures/fig-02.webp"
+           data-orig="assets/figures/orig/fig-02.png"
+           data-w="1086" data-h="1448" data-n="2" data-title="Comparative performance of other foundation models" data-zh="与基础模型头对头"
+           aria-label="放大查看 Figure 2：Comparative performance of other foundation models">
+          <img src="assets/figures/fig-02.webp" width="1086" height="1448"
+               style="max-width:1086px" alt="Figure 2 与七个基础模型的对比：精度-耗时散点、推理时间构成堆叠条、20 个任务的 ΔAUROC 热图、19 个可比任务标签上的排名分布。" loading="lazy" decoding="async">
+        </a>
+      </figure>
+    </div>
+  </section>
+  <section class="fig" id="f3">
+    <div class="wrap">
+      <div class="meta">
+        <div class="eyebrow"><span class="num">Figure 3</span><span class="tag">仅 a 为实测点估计</span></div>
+        <h2>Ablation of selection design<span class="zh">选择策略消融</span></h2>
+        <p class="lead"><span class="lead-k">展示方向</span>把“为什么用这个选择器”拆成四个可单独否证的对照：tile 预算、选择策略、排序打分、任务域敏感度；a 已有实测点，b–e 是待跑的设计。</p>
+        <p class="panels">a tile 预算 · b 策略 × 预算 · c 排序打分 · d 任务域 · e 预算与耗时</p>
+      </div>
+      <figure class="plate">
+        <a class="zoomable" href="assets/figures/orig/fig-03.png"
+           data-full="assets/figures/fig-03.webp"
+           data-orig="assets/figures/orig/fig-03.png"
+           data-w="1122" data-h="1402" data-n="3" data-title="Ablation of selection design" data-zh="选择策略消融"
+           aria-label="放大查看 Figure 3：Ablation of selection design">
+          <img src="assets/figures/fig-03.webp" width="1122" height="1402"
+               style="max-width:1122px" alt="Figure 3 选择策略消融：tile 预算与表示维度曲线（实测点），以及选择策略×预算、排序打分、任务域敏感度、预算与耗时四组待测设计面板。" loading="lazy" decoding="async">
+        </a>
+      </figure>
+    </div>
+  </section>
+  <section class="fig" id="f4">
+    <div class="wrap">
+      <div class="meta">
+        <div class="eyebrow"><span class="num">Figure 4</span><span class="tag">合成示意</span></div>
+        <h2>Visualization of selection heatmap<span class="zh">路由可视化</span></h2>
+        <p class="lead"><span class="lead-k">展示方向</span>机制图：用“5x 路由热图 → 20x 局部注意力 → 选中父块”三列，把抽象的选择变成审稿人可肉眼核对的空间对应关系。</p>
+        <p class="panels">三行示例 · 底部：1 个选中 5x 父块 → 4×4 子瓦片（20 × 16 = 320）</p>
+      </div>
+      <figure class="plate">
+        <a class="zoomable" href="assets/figures/orig/fig-04.png"
+           data-full="assets/figures/fig-04.webp"
+           data-orig="assets/figures/orig/fig-04.png"
+           data-w="1122" data-h="1402" data-n="4" data-title="Visualization of selection heatmap" data-zh="路由可视化"
+           aria-label="放大查看 Figure 4：Visualization of selection heatmap">
+          <img src="assets/figures/fig-04.webp" width="1122" height="1402"
+               style="max-width:1122px" alt="Figure 4 空间路由与选中区域可视化：每行依次为 H&amp;E 总览、5x 路由热图、20x 局部注意力、选中父块；底部示意一个选中父块展开为 4×4 个 20x 子瓦片。" loading="lazy" decoding="async">
+        </a>
+      </figure>
+    </div>
+  </section>
+  <section class="fig" id="f5">
+    <div class="wrap">
+      <div class="meta">
+        <div class="eyebrow"><span class="num">Figure 5</span><span class="tag">合成版式 · 结果待产出</span></div>
+        <h2>Extended evaluation<span class="zh">四任务域外推</span></h2>
+        <p class="lead"><span class="lead-k">展示方向</span>外推范围声明：诊断、标志物、治疗反应、生存四条线各给“逐院 forest + ROC/KM”，事先固定外部验证要交的答卷格式。</p>
+        <p class="panels">a 诊断 · b 标志物 · c 治疗反应 · d 生存</p>
+      </div>
+      <figure class="plate">
+        <a class="zoomable" href="assets/figures/orig/fig-05.png"
+           data-full="assets/figures/fig-05.webp"
+           data-orig="assets/figures/orig/fig-05.png"
+           data-w="846" data-h="1860" data-n="5" data-title="Extended evaluation" data-zh="四任务域外推"
+           aria-label="放大查看 Figure 5：Extended evaluation">
+          <img src="assets/figures/fig-05.webp" width="846" height="1860"
+               style="max-width:846px" alt="Figure 5 四大任务域的外部验证版式：诊断、标志物预测、治疗反应、生存预后，每条包含逐院森林图与 ROC 或 Kaplan-Meier 曲线。" loading="lazy" decoding="async">
+        </a>
+      </figure>
+    </div>
+  </section>
+  <section class="fig" id="f6">
+    <div class="wrap">
+      <div class="meta">
+        <div class="eyebrow"><span class="num">Figure 6</span><span class="tag">合成概念图 · 未测量</span></div>
+        <h2>Computational efficiency and performance<span class="zh">效率与性能</span></h2>
+        <p class="lead"><span class="lead-k">展示方向</span>效率的“公平上报”：时间、算力、显存、数据规模分四轴画，并拆开时间构成，正面回应“你的快是不是省了步骤”。</p>
+        <p class="panels">a 时间-精度 · b 算力-精度 · c 时间分解 · d 显存-负载 · e 数据缩减 · f 判别示例</p>
+      </div>
+      <figure class="plate">
+        <a class="zoomable" href="assets/figures/orig/fig-06.png"
+           data-full="assets/figures/fig-06.webp"
+           data-orig="assets/figures/orig/fig-06.png"
+           data-w="1122" data-h="1402" data-n="6" data-title="Computational efficiency and performance" data-zh="效率与性能"
+           aria-label="放大查看 Figure 6：Computational efficiency and performance">
+          <img src="assets/figures/fig-06.webp" width="1122" height="1402"
+               style="max-width:1122px" alt="Figure 6 计算效率与预测性能：时间-性能权衡、算力-性能权衡、端到端时间分解、峰值显存随负载变化、数据规模缩减评估，以及 ER 与 HER2 的判别示例。" loading="lazy" decoding="async">
+        </a>
+      </figure>
+    </div>
+  </section>
+  <section class="fig" id="f7">
+    <div class="wrap">
+      <div class="meta">
+        <div class="eyebrow"><span class="num">Figure 7</span><span class="tag">b–c 档案点估计 · d 待测</span></div>
+        <h2>Extensibility of BRIGHT-pipeline<span class="zh">管线可扩展性</span></h2>
+        <p class="lead"><span class="lead-k">展示方向</span>把方法讲成“插槽”而非一次性装置：固定选择与预算，只换 S3 编码器，用档案结果与接口表证明这条管线可复用、可扩展。</p>
+        <p class="panels">a S3 模块替换 · b 档案 20 任务均值 · c 任务谱 · d 性能-算力 · e 已注册接口</p>
+      </div>
+      <figure class="plate">
+        <a class="zoomable" href="assets/figures/orig/fig-07.png"
+           data-full="assets/figures/fig-07.webp"
+           data-orig="assets/figures/orig/fig-07.png"
+           data-w="1122" data-h="1402" data-n="7" data-title="Extensibility of BRIGHT-pipeline" data-zh="管线可扩展性"
+           aria-label="放大查看 Figure 7：Extensibility of BRIGHT-pipeline">
+          <img src="assets/figures/fig-07.webp" width="1122" height="1402"
+               style="max-width:1122px" alt="Figure 7 BRIGHT-pipeline 可扩展性：S1–S4 模块化流程中 S3 编码器可替换为 BRIGHT Teacher、H-optimus-1 或 Virchow2；档案 20 任务均值、选中任务验证热图、性能-算力示意与已注册接口维度表。" loading="lazy" decoding="async">
+        </a>
+      </figure>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>图片来源：<code>20261117.pptx</code>（7 页，逐页导出原图）。每张图内嵌的标注为准：标有 <em>synthetic / illustrative / not measured</em> 的面板尚无实测数据；历史点估计未做协议对齐与配对检验。</p>
+    <p class="foot-mute">静态页面 · 无追踪 · 无外部依赖</p>
+  </div>
+</footer>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="图片放大查看" hidden>
+  <div class="lb-bar">
+    <div class="lb-meta"><span id="lb-num">Figure 1</span><span id="lb-title"></span></div>
+    <div class="lb-actions">
+      <span class="lb-count" id="lb-count">1 / 7</span>
+      <button type="button" class="lb-btn" id="lb-prev" aria-label="上一张">←</button>
+      <button type="button" class="lb-btn" id="lb-next" aria-label="下一张">→</button>
+      <button type="button" class="lb-btn" id="lb-out" aria-label="缩小">−</button>
+      <button type="button" class="lb-btn" id="lb-in" aria-label="放大">+</button>
+      <button type="button" class="lb-btn" id="lb-fit" aria-label="适应窗口">适应</button>
+      <button type="button" class="lb-btn" id="lb-actual" aria-label="放大到 100%">100%</button>
+      <a class="lb-btn lb-link" id="lb-orig" href="#" target="_blank" rel="noopener">原图</a>
+      <button type="button" class="lb-btn lb-close" id="lb-close" aria-label="关闭">×</button>
+    </div>
+  </div>
+  <div class="lb-stage" id="lb-stage">
+    <img id="lb-img" alt="" draggable="false">
+  </div>
+</div>
+
+<script src="assets/app.js" defer></script>
+</body>
+</html>
